@@ -199,6 +199,16 @@ public sealed class Haulables : ClassWithFishPrepatches
 			
 			for (var i = haulables.Count; i-- > 0;)
 				ContainedThings.Add(haulables[i].GetKey());
+			if (IsDirty(haulables))
+			{
+				Verse.Log.Warning("Dirty cache after update. Deduplicating the list of haulables.");
+				FishSet<Thing> haulablesDeduped = [];
+				foreach (var thing in haulables)
+					haulablesDeduped.Add(thing);
+				haulables.Clear();
+				foreach (var thing in haulablesDeduped)
+					haulables.Add(thing);
+			}
 		}
 	}
 }
